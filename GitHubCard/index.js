@@ -3,7 +3,24 @@
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
- 
+import axios from "axios";
+
+function addUserToUI(name) {
+  axios
+    .get(`https://api.github.com/users/${name}`)
+    .then((res) => {
+      let data = res.data;
+
+      let cardEl = createCardHtml(data);
+      let cardsContainer = document.querySelector(".cards");
+
+      cardsContainer.insertAdjacentHTML("beforeend", cardEl);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -16,6 +33,7 @@
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
+addUserToUI("erikbahena");
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -28,7 +46,17 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell",
+];
+
+followersArray.forEach((name) => {
+  addUserToUI(name);
+});
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -49,6 +77,25 @@ const followersArray = [];
       </div>
     </div>
 */
+function createCardHtml(data) {
+  let html = `
+  <div class="card">
+      <img src="${data.avatar_url}"/>
+      <div class="card-info">
+        <h3 class="name">${data.name}</h3>
+        <p class="username">${data.login}</p>
+        <p>Location: ${data.location ? data.location : "unknown"}</p>
+        <p>Profile:
+          <a href="${data.html_url}">${data.html_url}</a>
+        </p>
+        <p>Followers: ${data.followers}</p>
+        <p>Following: ${data.following}</p>
+        <p>Bio: ${data.bio}</p>
+      </div>
+    </div>
+  `;
+  return html;
+}
 
 /*
   List of LS Instructors Github username's:
